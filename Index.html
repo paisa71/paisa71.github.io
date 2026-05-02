@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diego Urrego — QA Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #FAFAF8;
+    --bg2: #F2F0EB;
+    --bg3: #E8E5DE;
+    --text: #1A1916;
+    --text2: #5C5A54;
+    --text3: #9B9890;
+    --accent: #1A3A2A;
+    --accent-light: #E1F0E8;
+    --accent-text: #0F2A1E;
+    --border: rgba(26,25,22,0.12);
+    --border2: rgba(26,25,22,0.22);
+    --green: #3B6D11;
+    --green-bg: #EAF3DE;
+    --blue-bg: #E6F1FB;
+    --blue-text: #185FA5;
+    --warn-bg: #FAEEDA;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── LANG SWITCHER ── */
+  .lang-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250,250,248,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 0.5px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0.6rem 2rem;
+    gap: 4px;
+  }
+
+  .lang-bar span {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-right: 8px;
+  }
+
+  .lang-btn {
+    padding: 5px 14px;
+    border-radius: 99px;
+    border: 0.5px solid var(--border);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: all 0.15s;
+  }
+
+  .lang-btn:hover { background: var(--bg2); border-color: var(--border2); }
+  .lang-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2.5rem;
+    align-items: start;
+    padding-bottom: 3rem;
+    border-bottom: 0.5px solid var(--border);
+    margin-bottom: 3rem;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue-text);
+    background: var(--blue-bg);
+    padding: 4px 11px;
+    border-radius: 99px;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 52px;
+    font-weight: 400;
+    line-height: 1.05;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-role {
+    font-size: 16px;
+    color: var(--text2);
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+  }
+
+  .tagline {
+    font-size: 15px;
+    color: var(--text2);
+    line-height: 1.7;
+    font-style: italic;
+    border-left: 2px solid var(--accent);
+    padding-left: 1rem;
+    margin-bottom: 1.75rem;
+    max-width: 480px;
+  }
+
+  .contacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .contact-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    padding: 6px 13px;
+    border-radius: 99px;
+    border: 0.5px solid var(--border2);
+    color: var(--text2);
+    background: var(--bg2);
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+
+  .contact-pill:hover { background: var(--bg3); }
+
+  /* ── AVAILABILITY CARD ── */
+  .avail-card {
+    background: #fff;
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+    min-width: 160px;
+    box-shadow: 0 1px 16px rgba(0,0,0,0.05);
+  }
+
+  .avail-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--green);
+    display: inline-block;
+    margin-bottom: 10px;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(59,109,17,0.4); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 5px rgba(59,109,17,0); }
+  }
+
+  .avail-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text3); display: block; margin-bottom: 5px; }
+  .avail-status { font-size: 15px; font-weight: 500; color: var(--green); display: block; }
+  .avail-note { font-size: 11px; color: var(--text3); margin-top: 8px; line-height: 1.5; display: block; }
+
+  /* ── STATS ── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 3rem;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .stat-card {
+    background: var(--bg2);
+    border-radius: 12px;
+    padding: 1.1rem 1rem;
+  }
+
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 34px;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label { font-size: 12px; color: var(--text2); }
+
+  /* ── SECTIONS ── */
+  .section {
+    margin-bottom: 3rem;
+    animation: fadeUp 0.6s 0.15s ease both;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: var(--border);
+  }
+
+  /* ── SERVICES ── */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .service-card {
+    background: #fff;
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+
+  .service-card:hover {
+    border-color: var(--border2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  }
+
+  .service-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-bottom: 0.85rem;
+  }
+
+  .service-title { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+  .service-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  /* ── EXPERIENCE ── */
+  .exp-item {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 2rem;
+    padding: 1.5rem 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .exp-item:last-child { border-bottom: none; }
+
+  .exp-period { font-size: 12px; color: var(--text3); padding-top: 3px; line-height: 1.6; }
+  .exp-company { font-size: 16px; font-weight: 500; margin-bottom: 2px; }
+  .exp-role { font-size: 13px; color: var(--text2); margin-bottom: 10px; }
+  .exp-desc { font-size: 13px; color: var(--text2); line-height: 1.65; margin-bottom: 10px; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 99px;
+    border: 0.5px solid var(--border);
+    color: var(--text2);
+    background: var(--bg2);
+  }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .skill-group {
+    background: #fff;
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+  }
+
+  .skill-group-title {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 8px;
+  }
+
+  .skill-list { font-size: 13px; color: var(--text2); line-height: 2; }
+
+  /* ── PROJECTS ── */
+  .projects-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+  .project-chip {
+    font-size: 12px;
+    padding: 6px 13px;
+    border-radius: 99px;
+    background: var(--bg2);
+    color: var(--text2);
+    border: 0.5px solid var(--border);
+  }
+
+  /* ── LANGUAGES ── */
+  .langs { display: flex; gap: 10px; flex-wrap: wrap; }
+  .lang-item {
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    background: #fff;
+  }
+  .lang-item small { color: var(--text2); font-weight: 300; margin-left: 8px; font-size: 12px; }
+
+  /* ── CERTIFICATIONS ── */
+  .cert-list { list-style: none; }
+  .cert-list li {
+    font-size: 13px;
+    color: var(--text2);
+    padding: 6px 0;
+    border-bottom: 0.5px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .cert-list li:last-child { border-bottom: none; }
+  .cert-year { font-size: 11px; color: var(--text3); min-width: 36px; }
+
+  /* ── CTA ── */
+  .cta-block {
+    background: var(--accent);
+    border-radius: 16px;
+    padding: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .cta-text { font-size: 20px; font-family: 'DM Serif Display', serif; color: #fff; font-weight: 400; margin-bottom: 6px; }
+  .cta-sub { font-size: 13px; color: rgba(255,255,255,0.65); }
+
+  .cta-btn {
+    background: #fff;
+    color: var(--accent);
+    border: none;
+    padding: 12px 22px;
+    border-radius: 99px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.15s;
+  }
+
+  .cta-btn:hover { opacity: 0.9; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 12px;
+    color: var(--text3);
+    border-top: 0.5px solid var(--border);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    h1 { font-size: 36px; }
+    .hero { grid-template-columns: 1fr; }
+    .avail-card { display: none; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+    .exp-item { grid-template-columns: 1fr; gap: 0.25rem; }
+    .exp-period { margin-bottom: 4px; }
+    .container { padding: 2rem 1.25rem 4rem; }
+    .lang-bar { padding: 0.6rem 1rem; }
+  }
+
+  @media (max-width: 480px) {
+    .services-grid { grid-template-columns: 1fr; }
+    .skills-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── LANG VISIBILITY ── */
+  [data-lang] { display: none; }
+  body[data-active-lang="es"] [data-lang="es"] { display: contents; }
+  body[data-active-lang="en"] [data-lang="en"] { display: contents; }
+  body[data-active-lang="it"] [data-lang="it"] { display: contents; }
+  .stat-card[data-lang], .service-card[data-lang], .skill-group[data-lang],
+  .exp-item[data-lang], .cert-list[data-lang], .cta-block[data-lang],
+  .projects-wrap[data-lang] {
+    display: none;
+  }
+  body[data-active-lang="es"] .stat-card[data-lang="es"],
+  body[data-active-lang="es"] .service-card[data-lang="es"],
+  body[data-active-lang="es"] .skill-group[data-lang="es"],
+  body[data-active-lang="es"] .exp-item[data-lang="es"],
+  body[data-active-lang="es"] .cert-list[data-lang="es"],
+  body[data-active-lang="es"] .cta-block[data-lang="es"],
+  body[data-active-lang="es"] .projects-wrap[data-lang="es"] { display: block; }
+
+  body[data-active-lang="en"] .stat-card[data-lang="en"],
+  body[data-active-lang="en"] .service-card[data-lang="en"],
+  body[data-active-lang="en"] .skill-group[data-lang="en"],
+  body[data-active-lang="en"] .exp-item[data-lang="en"],
+  body[data-active-lang="en"] .cert-list[data-lang="en"],
+  body[data-active-lang="en"] .cta-block[data-lang="en"],
+  body[data-active-lang="en"] .projects-wrap[data-lang="en"] { display: block; }
+
+  body[data-active-lang="it"] .stat-card[data-lang="it"],
+  body[data-active-lang="it"] .service-card[data-lang="it"],
+  body[data-active-lang="it"] .skill-group[data-lang="it"],
+  body[data-active-lang="it"] .exp-item[data-lang="it"],
+  body[data-active-lang="it"] .cert-list[data-lang="it"],
+  body[data-active-lang="it"] .cta-block[data-lang="it"],
+  body[data-active-lang="it"] .projects-wrap[data-lang="it"] { display: block; }
+
+  .services-grid, .skills-grid { display: grid; }
+  .stats { display: grid; }
+
+  .stat-card[data-lang], .service-card[data-lang], .skill-group[data-lang] { display: none; }
+  body[data-active-lang="es"] .stat-card[data-lang="es"],
+  body[data-active-lang="es"] .service-card[data-lang="es"],
+  body[data-active-lang="es"] .skill-group[data-lang="es"] { display: block; }
+  body[data-active-lang="en"] .stat-card[data-lang="en"],
+  body[data-active-lang="en"] .service-card[data-lang="en"],
+  body[data-active-lang="en"] .skill-group[data-lang="en"] { display: block; }
+  body[data-active-lang="it"] .stat-card[data-lang="it"],
+  body[data-active-lang="it"] .service-card[data-lang="it"],
+  body[data-active-lang="it"] .skill-group[data-lang="it"] { display: block; }
+</style>
+</head>
+<body data-active-lang="es">
+
+<!-- LANG BAR -->
+<nav class="lang-bar" role="navigation" aria-label="Language selector">
+  <span>Language</span>
+  <button class="lang-btn active" onclick="setLang('es')" id="btn-es">ES</button>
+  <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+  <button class="lang-btn" onclick="setLang('it')" id="btn-it">IT</button>
+</nav>
+
+<div class="container">
+
+  <!-- ══ HERO ══ -->
+  <header class="hero">
+    <div>
+      <div class="badge" id="hero-badge">Disponible para trabajo remoto global</div>
+      <h1>Diego Urrego</h1>
+      <p class="hero-role" id="hero-role">QA Engineer · Testing de APIs &amp; Sistemas de Integración</p>
+      <p class="tagline" id="hero-tagline">Más de 7 años asegurando la calidad de sistemas financieros críticos. Trabajo con equipos distribuidos en cualquier zona horaria.</p>
+      <div class="contacts">
+        <a href="mailto:diegocol40@hotmail.com" class="contact-pill">✉ diegocol40@hotmail.com</a>
+        <a href="https://linkedin.com/in/diegourrego-qa" target="_blank" class="contact-pill">🔗 linkedin.com/in/diegourrego-qa</a>
+        <span class="contact-pill">📱 +39 375 733 6874</span>
+        <span class="contact-pill">📱 +54 11 3075-9782</span>
+      </div>
+    </div>
+    <div class="avail-card">
+      <div class="avail-dot"></div>
+      <span class="avail-label" id="avail-label">Estado</span>
+      <span class="avail-status" id="avail-status">Disponible</span>
+      <span class="avail-note" id="avail-note">Freelance / Full-time<br>Remoto · Global</span>
+    </div>
+  </header>
+
+  <!-- ══ STATS ══ -->
+  <div class="stats">
+    <div class="stat-card" data-lang="es">
+      <div class="stat-num">7+</div>
+      <div class="stat-label">Años de experiencia</div>
+    </div>
+    <div class="stat-card" data-lang="es">
+      <div class="stat-num">10+</div>
+      <div class="stat-label">Proyectos fintech</div>
+    </div>
+    <div class="stat-card" data-lang="es">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Idiomas</div>
+    </div>
+    <div class="stat-card" data-lang="es">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Remoto ready</div>
+    </div>
+
+    <div class="stat-card" data-lang="en">
+      <div class="stat-num">7+</div>
+      <div class="stat-label">Years of experience</div>
+    </div>
+    <div class="stat-card" data-lang="en">
+      <div class="stat-num">10+</div>
+      <div class="stat-label">Fintech projects</div>
+    </div>
+    <div class="stat-card" data-lang="en">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Languages</div>
+    </div>
+    <div class="stat-card" data-lang="en">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Remote ready</div>
+    </div>
+
+    <div class="stat-card" data-lang="it">
+      <div class="stat-num">7+</div>
+      <div class="stat-label">Anni di esperienza</div>
+    </div>
+    <div class="stat-card" data-lang="it">
+      <div class="stat-num">10+</div>
+      <div class="stat-label">Progetti fintech</div>
+    </div>
+    <div class="stat-card" data-lang="it">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Lingue parlate</div>
+    </div>
+    <div class="stat-card" data-lang="it">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Remote ready</div>
+    </div>
+  </div>
+
+  <!-- ══ SERVICES ══ -->
+  <section class="section">
+    <div class="section-label" id="label-services">Servicios que ofrezco</div>
+    <div class="services-grid">
+
+      <!-- ES -->
+      <div class="service-card" data-lang="es">
+        <div class="service-icon" style="background:var(--blue-bg)">🔌</div>
+        <div class="service-title">Testing de APIs REST/SOAP</div>
+        <div class="service-desc">Validación funcional, integración y regresión con Postman y SoapUI. Análisis de payloads JSON/XML.</div>
+      </div>
+      <div class="service-card" data-lang="es">
+        <div class="service-icon" style="background:var(--warn-bg)">⚡</div>
+        <div class="service-title">Pruebas de rendimiento</div>
+        <div class="service-desc">Testing de carga y performance sobre APIs críticas con JMeter en sistemas de alta concurrencia.</div>
+      </div>
+      <div class="service-card" data-lang="es">
+        <div class="service-icon" style="background:var(--green-bg)">📋</div>
+        <div class="service-title">QA Strategy &amp; Planning</div>
+        <div class="service-desc">Definición de criterios de aceptación, refinamiento de historias y diseño de estrategias de prueba.</div>
+      </div>
+      <div class="service-card" data-lang="es">
+        <div class="service-icon" style="background:#FCEBEB">🐛</div>
+        <div class="service-title">Gestión de defectos</div>
+        <div class="service-desc">Documentación, seguimiento y cierre de bugs con Jira y Azure DevOps. Reportes de calidad.</div>
+      </div>
+      <div class="service-card" data-lang="es">
+        <div class="service-icon" style="background:var(--blue-bg)">💳</div>
+        <div class="service-title">Testing de pagos &amp; fintech</div>
+        <div class="service-desc">Especialista en tokenización, 3DS, QR, eCommerce, débito automático y procesamiento batch.</div>
+      </div>
+      <div class="service-card" data-lang="es">
+        <div class="service-icon" style="background:var(--bg2)">🤖</div>
+        <div class="service-title">Automatización</div>
+        <div class="service-desc">Selenium y Golang para automatización de pruebas. Experiencia en métricas de auditoría automatizadas.</div>
+      </div>
+
+      <!-- EN -->
+      <div class="service-card" data-lang="en">
+        <div class="service-icon" style="background:var(--blue-bg)">🔌</div>
+        <div class="service-title">REST/SOAP API Testing</div>
+        <div class="service-desc">Functional, integration and regression validation with Postman and SoapUI. JSON/XML payload analysis.</div>
+      </div>
+      <div class="service-card" data-lang="en">
+        <div class="service-icon" style="background:var(--warn-bg)">⚡</div>
+        <div class="service-title">Performance Testing</div>
+        <div class="service-desc">Load and performance testing on critical APIs using JMeter in high-concurrency financial systems.</div>
+      </div>
+      <div class="service-card" data-lang="en">
+        <div class="service-icon" style="background:var(--green-bg)">📋</div>
+        <div class="service-title">QA Strategy &amp; Planning</div>
+        <div class="service-desc">Acceptance criteria definition, story refinement, and test strategy design from early development phases.</div>
+      </div>
+      <div class="service-card" data-lang="en">
+        <div class="service-icon" style="background:#FCEBEB">🐛</div>
+        <div class="service-title">Defect Management</div>
+        <div class="service-desc">Bug documentation, tracking and closure with Jira and Azure DevOps. Weekly quality reporting.</div>
+      </div>
+      <div class="service-card" data-lang="en">
+        <div class="service-icon" style="background:var(--blue-bg)">💳</div>
+        <div class="service-title">Payments &amp; Fintech QA</div>
+        <div class="service-desc">Specialist in tokenization, 3DS, QR payments, eCommerce flows, direct debit, and batch processing E2E.</div>
+      </div>
+      <div class="service-card" data-lang="en">
+        <div class="service-icon" style="background:var(--bg2)">🤖</div>
+        <div class="service-title">Test Automation</div>
+        <div class="service-desc">Selenium and Golang for test automation. Prior experience building audit metric automation pipelines.</div>
+      </div>
+
+      <!-- IT -->
+      <div class="service-card" data-lang="it">
+        <div class="service-icon" style="background:var(--blue-bg)">🔌</div>
+        <div class="service-title">Testing di API REST/SOAP</div>
+        <div class="service-desc">Validazione funzionale, integrazione e regressione con Postman e SoapUI. Analisi payload JSON/XML.</div>
+      </div>
+      <div class="service-card" data-lang="it">
+        <div class="service-icon" style="background:var(--warn-bg)">⚡</div>
+        <div class="service-title">Test di performance</div>
+        <div class="service-desc">Testing di carico e performance su API critiche con JMeter in sistemi ad alta concorrenza.</div>
+      </div>
+      <div class="service-card" data-lang="it">
+        <div class="service-icon" style="background:var(--green-bg)">📋</div>
+        <div class="service-title">QA Strategy &amp; Planning</div>
+        <div class="service-desc">Definizione criteri di accettazione, raffinamento delle storie e progettazione della strategia di test.</div>
+      </div>
+      <div class="service-card" data-lang="it">
+        <div class="service-icon" style="background:#FCEBEB">🐛</div>
+        <div class="service-title">Gestione dei difetti</div>
+        <div class="service-desc">Documentazione, tracciamento e chiusura bug con Jira e Azure DevOps. Report di qualità settimanali.</div>
+      </div>
+      <div class="service-card" data-lang="it">
+        <div class="service-icon" style="background:var(--blue-bg)">💳</div>
+        <div class="service-title">QA per pagamenti &amp; fintech</div>
+        <div class="service-desc">Specialista in tokenizzazione, 3DS, pagamenti QR, eCommerce, addebito diretto e processi batch E2E.</div>
+      </div>
+      <div class="service-card" data-lang="it">
+        <div class="service-icon" style="background:var(--bg2)">🤖</div>
+        <div class="service-title">Test automation</div>
+        <div class="service-desc">Selenium e Golang per l'automazione dei test. Esperienza nella creazione di pipeline di metriche di audit.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ EXPERIENCE ══ -->
+  <section class="section">
+    <div class="section-label" id="label-exp">Experiencia</div>
+
+    <!-- ES -->
+    <div class="exp-item" data-lang="es">
+      <div class="exp-period">Feb 2022 – Presente<br>Buenos Aires, Argentina</div>
+      <div>
+        <div class="exp-company">Adviters – Global Processing</div>
+        <div class="exp-role">Analista Senior QA</div>
+        <div class="exp-desc">Testing de APIs REST en entornos de alta integración financiera. Validación y análisis de payloads JSON/XML, lectura de logs, pruebas de rendimiento con JMeter y coordinación con squads ágiles multidisciplinarios. Participación activa en refinamiento de historias y definición de criterios de aceptación.</div>
+        <div class="tags">
+          <span class="tag">Postman</span><span class="tag">JMeter</span><span class="tag">JSON/XML</span><span class="tag">Jira</span><span class="tag">Azure DevOps</span><span class="tag">Scrum</span><span class="tag">GitHub</span>
+        </div>
+      </div>
+    </div>
+    <div class="exp-item" data-lang="es">
+      <div class="exp-period">Dic 2014 – Nov 2020<br>Buenos Aires, Argentina</div>
+      <div>
+        <div class="exp-company">MRM McCann</div>
+        <div class="exp-role">QA Analyst</div>
+        <div class="exp-desc">Diseño y ejecución de planes de prueba funcionales para aplicaciones web y móviles. Automatización para generación de métricas de auditoría. Gestión de repositorios con Jira y SVN. Emisión de informes de calidad semanales para áreas de OLA, Email y Sitios.</div>
+        <div class="tags">
+          <span class="tag">Web Testing</span><span class="tag">Mobile QA</span><span class="tag">Selenium</span><span class="tag">Jira</span><span class="tag">SVN</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- EN -->
+    <div class="exp-item" data-lang="en">
+      <div class="exp-period">Feb 2022 – Present<br>Buenos Aires, Argentina</div>
+      <div>
+        <div class="exp-company">Adviters – Global Processing</div>
+        <div class="exp-role">Senior QA Analyst</div>
+        <div class="exp-desc">REST API testing in high-integration financial environments. JSON/XML payload validation and analysis, log analysis, performance testing with JMeter, and coordination with multidisciplinary agile squads. Active participation in story refinement and acceptance criteria definition.</div>
+        <div class="tags">
+          <span class="tag">Postman</span><span class="tag">JMeter</span><span class="tag">JSON/XML</span><span class="tag">Jira</span><span class="tag">Azure DevOps</span><span class="tag">Scrum</span><span class="tag">GitHub</span>
+        </div>
+      </div>
+    </div>
+    <div class="exp-item" data-lang="en">
+      <div class="exp-period">Dec 2014 – Nov 2020<br>Buenos Aires, Argentina</div>
+      <div>
+        <div class="exp-company">MRM McCann</div>
+        <div class="exp-role">QA Analyst</div>
+        <div class="exp-desc">Design and execution of functional test plans for web and mobile applications. Automation for audit metric generation. Repository management with Jira and SVN. Weekly quality reporting for OLA, Email and Sites teams.</div>
+        <div class="tags">
+          <span class="tag">Web Testing</span><span class="tag">Mobile QA</span><span class="tag">Selenium</span><span class="tag">Jira</span><span class="tag">SVN</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- IT -->
+    <div class="exp-item" data-lang="it">
+      <div class="exp-period">Feb 2022 – Presente<br>Buenos Aires, Argentina</div>
+      <div>
+        <div class="exp-company">Adviters – Global Processing</div>
+        <div class="exp-role">Senior QA Analyst</div>
+        <div class="exp-desc">Testing di API REST in ambienti di alta integrazione finanziaria. Validazione di payload JSON/XML, analisi dei log, test di performance con JMeter e coordinamento con squad agili multidisciplinari. Partecipazione attiva nel raffinamento delle storie e nella definizione dei criteri di accettazione.</div>
+        <div class="tags">
+          <span class="tag">Postman</span><span class="tag">JMeter</span><span class="tag">JSON/XML</span><span class="tag">Jira</span><span class="tag">Azure DevOps</span><span class="tag">Scrum</span><span class="tag">GitHub</span>
+        </div>
+      </div>
+    </div>
+    <div class="exp-item" data-lang="it">
+      <div class="exp-period">Dic 2014 – Nov 2020<br>Buenos Aires, Argentina</div>
+      <div>
+        <div class="exp-company">MRM McCann</div>
+        <div class="exp-role">QA Analyst</div>
+        <div class="exp-desc">Progettazione ed esecuzione di piani di test funzionali per applicazioni web e mobile. Automazione per la generazione di metriche di audit. Gestione repository con Jira e SVN. Report di qualità settimanali per i team OLA, Email e Siti.</div>
+        <div class="tags">
+          <span class="tag">Web Testing</span><span class="tag">Mobile QA</span><span class="tag">Selenium</span><span class="tag">Jira</span><span class="tag">SVN</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PROJECTS ══ -->
+  <section class="section">
+    <div class="section-label" id="label-projects">Proyectos destacados en fintech</div>
+    <div class="projects-wrap" data-lang="es">
+      <span class="project-chip">Tokenización &amp; 3DS</span>
+      <span class="project-chip">Transacciones QR</span>
+      <span class="project-chip">eCommerce</span>
+      <span class="project-chip">Tap To Phone</span>
+      <span class="project-chip">Débito Automático</span>
+      <span class="project-chip">Mandatos Mastercard &amp; Visa</span>
+      <span class="project-chip">Devolución de IVA</span>
+      <span class="project-chip">Procesos Batch E2E</span>
+    </div>
+    <div class="projects-wrap" data-lang="en">
+      <span class="project-chip">Tokenization &amp; 3DS</span>
+      <span class="project-chip">QR Transactions</span>
+      <span class="project-chip">eCommerce</span>
+      <span class="project-chip">Tap To Phone</span>
+      <span class="project-chip">Direct Debit</span>
+      <span class="project-chip">Mastercard &amp; Visa Mandates</span>
+      <span class="project-chip">VAT Refund</span>
+      <span class="project-chip">Batch Processes E2E</span>
+    </div>
+    <div class="projects-wrap" data-lang="it">
+      <span class="project-chip">Tokenizzazione &amp; 3DS</span>
+      <span class="project-chip">Transazioni QR</span>
+      <span class="project-chip">eCommerce</span>
+      <span class="project-chip">Tap To Phone</span>
+      <span class="project-chip">Addebito Diretto</span>
+      <span class="project-chip">Mandati Mastercard &amp; Visa</span>
+      <span class="project-chip">Rimborso IVA</span>
+      <span class="project-chip">Processi Batch E2E</span>
+    </div>
+  </section>
+
+  <!-- ══ SKILLS ══ -->
+  <section class="section">
+    <div class="section-label" id="label-skills">Stack técnico</div>
+    <div class="skills-grid">
+
+      <!-- ES -->
+      <div class="skill-group" data-lang="es"><div class="skill-group-title">Testing de APIs</div><div class="skill-list">Postman (avanzado)<br>SoapUI<br>JMeter</div></div>
+      <div class="skill-group" data-lang="es"><div class="skill-group-title">Datos &amp; Formatos</div><div class="skill-list">JSON<br>XML<br>SQL</div></div>
+      <div class="skill-group" data-lang="es"><div class="skill-group-title">Gestión &amp; DevOps</div><div class="skill-list">Jira<br>Azure DevOps<br>GitHub</div></div>
+      <div class="skill-group" data-lang="es"><div class="skill-group-title">Automatización</div><div class="skill-list">Selenium<br>Golang<br>Test Engine</div></div>
+      <div class="skill-group" data-lang="es"><div class="skill-group-title">Plataformas</div><div class="skill-list">Linux<br>AWS<br>SAP</div></div>
+      <div class="skill-group" data-lang="es"><div class="skill-group-title">Metodologías</div><div class="skill-list">Scrum (certificado)<br>Agile</div></div>
+
+      <!-- EN -->
+      <div class="skill-group" data-lang="en"><div class="skill-group-title">API Testing</div><div class="skill-list">Postman (advanced)<br>SoapUI<br>JMeter</div></div>
+      <div class="skill-group" data-lang="en"><div class="skill-group-title">Data &amp; Formats</div><div class="skill-list">JSON<br>XML<br>SQL</div></div>
+      <div class="skill-group" data-lang="en"><div class="skill-group-title">Management &amp; DevOps</div><div class="skill-list">Jira<br>Azure DevOps<br>GitHub</div></div>
+      <div class="skill-group" data-lang="en"><div class="skill-group-title">Automation</div><div class="skill-list">Selenium<br>Golang<br>Test Engine</div></div>
+      <div class="skill-group" data-lang="en"><div class="skill-group-title">Platforms</div><div class="skill-list">Linux<br>AWS<br>SAP</div></div>
+      <div class="skill-group" data-lang="en"><div class="skill-group-title">Methodologies</div><div class="skill-list">Scrum (certified)<br>Agile</div></div>
+
+      <!-- IT -->
+      <div class="skill-group" data-lang="it"><div class="skill-group-title">Testing API</div><div class="skill-list">Postman (avanzato)<br>SoapUI<br>JMeter</div></div>
+      <div class="skill-group" data-lang="it"><div class="skill-group-title">Dati &amp; Formati</div><div class="skill-list">JSON<br>XML<br>SQL</div></div>
+      <div class="skill-group" data-lang="it"><div class="skill-group-title">Gestione &amp; DevOps</div><div class="skill-list">Jira<br>Azure DevOps<br>GitHub</div></div>
+      <div class="skill-group" data-lang="it"><div class="skill-group-title">Automazione</div><div class="skill-list">Selenium<br>Golang<br>Test Engine</div></div>
+      <div class="skill-group" data-lang="it"><div class="skill-group-title">Piattaforme</div><div class="skill-list">Linux<br>AWS<br>SAP</div></div>
+      <div class="skill-group" data-lang="it"><div class="skill-group-title">Metodologie</div><div class="skill-list">Scrum (certificato)<br>Agile</div></div>
+    </div>
+  </section>
+
+  <!-- ══ CERTIFICATIONS ══ -->
+  <section class="section">
+    <div class="section-label" id="label-certs">Formación y certificaciones</div>
+
+    <ul class="cert-list" data-lang="es">
+      <li><span class="cert-year">2025</span> Curso profesional de Go (Golang) – De cero a Master · Udemy</li>
+      <li><span class="cert-year">2021</span> Scrum Fundamentals Certified (SFC) · SCRUMstudy</li>
+      <li><span class="cert-year">2021</span> Tester de Software Profesional · Edutin Academy</li>
+      <li><span class="cert-year">2021</span> Programación orientada a objetos · Fundación Carlos Slim</li>
+      <li><span class="cert-year">2021</span> SQL – Curso completo de Bases de Datos · Udemy</li>
+      <li><span class="cert-year">2021</span> Desarrollo Web I y II · Google Activate</li>
+    </ul>
+    <ul class="cert-list" data-lang="en">
+      <li><span class="cert-year">2025</span> Professional Go (Golang) Course – Zero to Master · Udemy</li>
+      <li><span class="cert-year">2021</span> Scrum Fundamentals Certified (SFC) · SCRUMstudy</li>
+      <li><span class="cert-year">2021</span> Professional Software Tester · Edutin Academy</li>
+      <li><span class="cert-year">2021</span> Object-Oriented Programming · Fundación Carlos Slim</li>
+      <li><span class="cert-year">2021</span> SQL – Complete Database Course · Udemy</li>
+      <li><span class="cert-year">2021</span> Web Development I &amp; II · Google Activate</li>
+    </ul>
+    <ul class="cert-list" data-lang="it">
+      <li><span class="cert-year">2025</span> Corso professionale di Go (Golang) – Da zero a Master · Udemy</li>
+      <li><span class="cert-year">2021</span> Scrum Fundamentals Certified (SFC) · SCRUMstudy</li>
+      <li><span class="cert-year">2021</span> Tester Software Professionale · Edutin Academy</li>
+      <li><span class="cert-year">2021</span> Programmazione orientata agli oggetti · Fundación Carlos Slim</li>
+      <li><span class="cert-year">2021</span> SQL – Corso completo di Database · Udemy</li>
+      <li><span class="cert-year">2021</span> Sviluppo Web I &amp; II · Google Activate</li>
+    </ul>
+  </section>
+
+  <!-- ══ LANGUAGES ══ -->
+  <section class="section">
+    <div class="section-label" id="label-langs">Idiomas</div>
+    <div class="langs">
+      <div class="lang-item" id="lang-es">Español <small id="lang-es-lvl">Nativo</small></div>
+      <div class="lang-item" id="lang-en">English <small id="lang-en-lvl">Intermediate – in progress</small></div>
+      <div class="lang-item" id="lang-it">Italiano <small id="lang-it-lvl">B1 – in corso</small></div>
+    </div>
+  </section>
+
+  <!-- ══ CTA ══ -->
+  <div class="cta-block" data-lang="es">
+    <div>
+      <div class="cta-text">¿Tenés un proyecto o posición remota?</div>
+      <div class="cta-sub">Disponible para freelance, contratos y posiciones full-time. Cualquier zona horaria.</div>
+    </div>
+    <a href="mailto:diegocol40@hotmail.com" class="cta-btn">Escribirme →</a>
+  </div>
+  <div class="cta-block" data-lang="en">
+    <div>
+      <div class="cta-text">Have a project or remote position?</div>
+      <div class="cta-sub">Available for freelance, contracts and full-time roles. Any timezone.</div>
+    </div>
+    <a href="mailto:diegocol40@hotmail.com" class="cta-btn">Get in touch →</a>
+  </div>
+  <div class="cta-block" data-lang="it">
+    <div>
+      <div class="cta-text">Hai un progetto o una posizione remota?</div>
+      <div class="cta-sub">Disponibile per freelance, contratti e ruoli full-time. Qualsiasi fuso orario.</div>
+    </div>
+    <a href="mailto:diegocol40@hotmail.com" class="cta-btn">Contattami →</a>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-text">Diego Luis Urrego Mejía · QA Engineer · diegocol40@hotmail.com</span>
+</footer>
+
+<script>
+const i18n = {
+  es: {
+    badge: "Disponible para trabajo remoto global",
+    role: "QA Engineer · Testing de APIs & Sistemas de Integración",
+    tagline: "Más de 7 años asegurando la calidad de sistemas financieros críticos. Trabajo con equipos distribuidos en cualquier zona horaria.",
+    availLabel: "Estado",
+    availStatus: "Disponible",
+    availNote: "Freelance / Full-time<br>Remoto · Global",
+    labelServices: "Servicios que ofrezco",
+    labelExp: "Experiencia",
+    labelProjects: "Proyectos destacados en fintech",
+    labelSkills: "Stack técnico",
+    labelCerts: "Formación y certificaciones",
+    labelLangs: "Idiomas",
+    langEsLvl: "Nativo",
+    langEnLvl: "Intermedio – en curso",
+    langItLvl: "B1 – en curso",
+    footer: "Diego Luis Urrego Mejía · QA Engineer · diegocol40@hotmail.com",
+  },
+  en: {
+    badge: "Available for global remote work",
+    role: "QA Engineer · API Testing & Integration Systems",
+    tagline: "7+ years ensuring quality in critical financial systems. Working with distributed teams across any time zone.",
+    availLabel: "Status",
+    availStatus: "Available",
+    availNote: "Freelance / Full-time<br>Remote · Global",
+    labelServices: "Services I offer",
+    labelExp: "Experience",
+    labelProjects: "Featured fintech projects",
+    labelSkills: "Technical stack",
+    labelCerts: "Education & certifications",
+    labelLangs: "Languages",
+    langEsLvl: "Native",
+    langEnLvl: "Intermediate – in progress",
+    langItLvl: "B1 – in progress",
+    footer: "Diego Luis Urrego Mejía · QA Engineer · diegocol40@hotmail.com",
+  },
+  it: {
+    badge: "Disponibile per lavoro remoto globale",
+    role: "QA Engineer · Testing di API e sistemi di integrazione",
+    tagline: "Oltre 7 anni a garantire la qualità di sistemi finanziari critici. Lavoro con team distribuiti in qualsiasi fuso orario.",
+    availLabel: "Stato",
+    availStatus: "Disponibile",
+    availNote: "Freelance / Full-time<br>Remoto · Globale",
+    labelServices: "Servizi che offro",
+    labelExp: "Esperienza",
+    labelProjects: "Progetti fintech in evidenza",
+    labelSkills: "Stack tecnico",
+    labelCerts: "Formazione e certificazioni",
+    labelLangs: "Lingue",
+    langEsLvl: "Madrelingua",
+    langEnLvl: "Intermedio – in corso",
+    langItLvl: "B1 – in corso",
+    footer: "Diego Luis Urrego Mejía · QA Engineer · diegocol40@hotmail.com",
+  }
+};
+
+function setLang(lang) {
+  document.body.setAttribute('data-active-lang', lang);
+  document.documentElement.setAttribute('lang', lang);
+  ['es','en','it'].forEach(l => {
+    document.getElementById('btn-' + l).classList.toggle('active', l === lang);
+  });
+  const t = i18n[lang];
+  document.getElementById('hero-badge').textContent = t.badge;
+  document.getElementById('hero-role').textContent = t.role;
+  document.getElementById('hero-tagline').textContent = t.tagline;
+  document.getElementById('avail-label').textContent = t.availLabel;
+  document.getElementById('avail-status').textContent = t.availStatus;
+  document.getElementById('avail-note').innerHTML = t.availNote;
+  document.getElementById('label-services').childNodes[0].textContent = t.labelServices + ' ';
+  document.getElementById('label-exp').childNodes[0].textContent = t.labelExp + ' ';
+  document.getElementById('label-projects').childNodes[0].textContent = t.labelProjects + ' ';
+  document.getElementById('label-skills').childNodes[0].textContent = t.labelSkills + ' ';
+  document.getElementById('label-certs').childNodes[0].textContent = t.labelCerts + ' ';
+  document.getElementById('label-langs').childNodes[0].textContent = t.labelLangs + ' ';
+  document.getElementById('lang-es-lvl').textContent = t.langEsLvl;
+  document.getElementById('lang-en-lvl').textContent = t.langEnLvl;
+  document.getElementById('lang-it-lvl').textContent = t.langItLvl;
+  document.getElementById('footer-text').textContent = t.footer;
+  document.title = lang === 'en' ? 'Diego Urrego — QA Engineer' : lang === 'it' ? 'Diego Urrego — QA Engineer' : 'Diego Urrego — QA Engineer';
+}
+</script>
+</body>
+</html>
